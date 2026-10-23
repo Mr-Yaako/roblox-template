@@ -1,0 +1,12 @@
+# Paquetes de Wally (se regeneran con `wally install`)
+Packages/
+ServerPackages/
+DevPackages/
+
+# Generados
+sourcemap.json
+*.rbxl
+*.rbxlx
+*.rbxl.lock
+*.rbxlx.lock
+build/
