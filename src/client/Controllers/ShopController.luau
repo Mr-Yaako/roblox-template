@@ -47,7 +47,7 @@ local function row(order: number, title: string, description: string, attribute:
 	local button = create("TextButton", {
 		AnchorPoint = Vector2.new(1, 0.5),
 		Position = UDim2.new(1, -8, 0.5, 0),
-		Size = UDim2.new(0, 130, 0, 36),
+		Size = UDim2.fromOffset(130, 36),
 		BackgroundColor3 = Color3.fromRGB(46, 160, 67),
 		Font = Enum.Font.GothamBold,
 		TextSize = 14,
@@ -61,7 +61,7 @@ local function row(order: number, title: string, description: string, attribute:
 	}, {
 		corner(),
 		create("TextLabel", {
-			Position = UDim2.new(0, 10, 0, 6),
+			Position = UDim2.fromOffset(10, 6),
 			Size = UDim2.new(1, -160, 0, 22),
 			BackgroundTransparency = 1,
 			Font = Enum.Font.GothamBold,
@@ -71,7 +71,7 @@ local function row(order: number, title: string, description: string, attribute:
 			Text = title,
 		}),
 		create("TextLabel", {
-			Position = UDim2.new(0, 10, 0, 28),
+			Position = UDim2.fromOffset(10, 28),
 			Size = UDim2.new(1, -160, 0, 20),
 			BackgroundTransparency = 1,
 			Font = Enum.Font.Gotham,
@@ -177,7 +177,7 @@ function ShopController.Start()
 	})
 
 	local list = create("ScrollingFrame", {
-		Position = UDim2.new(0, 12, 0, 48),
+		Position = UDim2.fromOffset(12, 48),
 		Size = UDim2.new(1, -24, 1, -88),
 		BackgroundTransparency = 1,
 		BorderSizePixel = 0,
@@ -191,7 +191,7 @@ function ShopController.Start()
 	local closeButton = create("TextButton", {
 		AnchorPoint = Vector2.new(1, 0),
 		Position = UDim2.new(1, -12, 0, 10),
-		Size = UDim2.new(0, 90, 0, 30),
+		Size = UDim2.fromOffset(90, 30),
 		BackgroundColor3 = Color3.fromRGB(180, 60, 60),
 		Font = Enum.Font.GothamBold,
 		TextSize = 14,
@@ -209,7 +209,7 @@ function ShopController.Start()
 		corner(),
 		create("UISizeConstraint", { MinSize = Vector2.new(320, 300), MaxSize = Vector2.new(560, 520) }),
 		create("TextLabel", {
-			Position = UDim2.new(0, 12, 0, 10),
+			Position = UDim2.fromOffset(12, 10),
 			Size = UDim2.new(1, -120, 0, 30),
 			BackgroundTransparency = 1,
 			Font = Enum.Font.GothamBlack,
@@ -226,7 +226,7 @@ function ShopController.Start()
 	local openButton = create("TextButton", {
 		AnchorPoint = Vector2.new(0, 0.5),
 		Position = UDim2.new(0, 12, 0.5, 0),
-		Size = UDim2.new(0, 100, 0, 40),
+		Size = UDim2.fromOffset(100, 40),
 		BackgroundColor3 = Color3.fromRGB(255, 170, 0),
 		Font = Enum.Font.GothamBold,
 		TextSize = 16,
