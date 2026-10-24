@@ -7,6 +7,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local GameConfig = require(ReplicatedStorage.Shared.GameConfig)
+local Progression = require(ReplicatedStorage.Shared.Progression)
 local Remotes = require(ReplicatedStorage.Shared.Remotes)
 
 local player = Players.LocalPlayer
@@ -43,7 +44,15 @@ local function header(text: string, order: number)
 end
 
 -- Fila con nombre, descripción, precio y botón. refresh() actualiza el botón según attribute.
-local function row(order: number, title: string, description: string, attribute: string, onBuy: () -> ())
+-- ownedText es lo que dice el botón cuando attribute es true (por defecto "Ya lo tienes").
+local function row(
+	order: number,
+	title: string,
+	description: string,
+	attribute: string,
+	onBuy: () -> (),
+	ownedText: string?
+)
 	local button = create("TextButton", {
 		AnchorPoint = Vector2.new(1, 0.5),
 		Position = UDim2.new(1, -8, 0.5, 0),
@@ -86,7 +95,7 @@ local function row(order: number, title: string, description: string, attribute:
 	local priceText = Text.Buy
 	local function refresh()
 		local owned = player:GetAttribute(attribute) == true
-		button.Text = if owned then Text.Owned else priceText
+		button.Text = if owned then ownedText or Text.Owned else priceText
 		button.AutoButtonColor = not owned
 		button.BackgroundColor3 = if owned then Color3.fromRGB(90, 90, 100) else Color3.fromRGB(46, 160, 67)
 	end
@@ -123,13 +132,60 @@ local function buildList(list: ScrollingFrame, status: TextLabel)
 		return order
 	end
 
-	header(Text.ItemsHeader, nextOrder()).Parent = list
+	if next(GameConfig.ShopItems) then
+		header(Text.ItemsHeader, nextOrder()).Parent = list
+	end
 	for itemId, item in GameConfig.ShopItems do
 		local frame, setPrice = row(nextOrder(), item.DisplayName, item.Description, "Owns_" .. itemId, function()
 			local ok, message = purchaseItem:InvokeServer(itemId)
 			status.Text = if ok then "" else message or ""
 		end)
 		setPrice(`{item.Price} {GameConfig.Currency.Key}`)
+		frame.Parent = list
+	end
+
+	local purchaseUpgrade = Remotes.Function("PurchaseUpgrade")
+	if next(GameConfig.Upgrades) then
+		header(Text.UpgradesHeader, nextOrder()).Parent = list
+	end
+	for upgradeId, upgrade in GameConfig.Upgrades do
+		local levelAttribute = "Upgrade_" .. upgradeId
+		local maxAttribute = "UpgradeMax_" .. upgradeId
+		local frame, setPrice = row(nextOrder(), upgrade.DisplayName, upgrade.Description, maxAttribute, function()
+			local ok, message = purchaseUpgrade:InvokeServer(upgradeId)
+			status.Text = if ok then "" else message or ""
+		end, Text.MaxLevel)
+
+		-- Atributo local (solo en este cliente) para que row() muestre "Nivel máximo".
+		local function refreshLevel()
+			local level = player:GetAttribute(levelAttribute) or 1
+			local price = Progression.UpgradePrice(upgradeId, level)
+			player:SetAttribute(maxAttribute, price == nil)
+			if price then
+				setPrice(`{Text.Level} {level} · {price} {GameConfig.Currency.Key}`)
+			end
+		end
+		player:GetAttributeChangedSignal(levelAttribute):Connect(refreshLevel)
+		refreshLevel()
+		frame.Parent = list
+	end
+
+	if GameConfig.Rebirth.Enabled then
+		local rebirth = Remotes.Function("Rebirth")
+		header(Text.RebirthHeader, nextOrder()).Parent = list
+		local bonus = math.floor(GameConfig.Rebirth.CoinBonusPerRebirth * 100 + 0.5)
+		local description = string.format(Text.RebirthDescription, bonus)
+		-- Atributo que nunca existe: se puede renacer muchas veces.
+		local frame, setPrice = row(nextOrder(), Text.RebirthHeader, description, "_", function()
+			local ok, message = rebirth:InvokeServer()
+			status.Text = if ok then "" else message or ""
+		end)
+		local function refreshRebirth()
+			local price = Progression.RebirthPrice(player:GetAttribute("Rebirths") or 0)
+			setPrice(`{price} {GameConfig.Currency.Key}`)
+		end
+		player:GetAttributeChangedSignal("Rebirths"):Connect(refreshRebirth)
+		refreshRebirth()
 		frame.Parent = list
 	end
 

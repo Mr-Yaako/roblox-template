@@ -8,6 +8,8 @@ local START_ORDER = {
 	"MonetizationService",
 	"CurrencyService",
 	"ShopService",
+	"UpgradeService",
+	"RebirthService",
 	"DataService",
 }
 

@@ -31,6 +31,30 @@ GameConfig.ShopItems = {
 	},
 }
 
+-- Mejoras con niveles: se compran varias veces y cada nivel cuesta más. Values[n] es el valor en
+-- el nivel n (el nivel 1 es gratis); el precio para subir del nivel n al n+1 es
+-- BasePrice * PriceGrowth^(n-1). El efecto vive en server/UpgradeEffects.luau, o léelo desde tus
+-- servicios con UpgradeService.GetValue(player, id).
+GameConfig.Upgrades = {
+	MaxHealth = {
+		DisplayName = "Vida máxima",
+		Description = "Más vida en cada nivel",
+		BasePrice = 50,
+		PriceGrowth = 1.8,
+		Values = { 100, 125, 150, 175, 200 },
+	},
+}
+
+-- Renacer: reinicia monedas (y mejoras si ResetUpgrades) a cambio de un bono permanente de monedas.
+-- Precio del renacimiento n+1: BasePrice * PriceGrowth^n.
+GameConfig.Rebirth = {
+	Enabled = true,
+	BasePrice = 25000,
+	PriceGrowth = 1.5,
+	CoinBonusPerRebirth = 0.25, -- +25% de monedas por cada renacimiento, acumulable
+	ResetUpgrades = true,
+}
+
 -- Game passes (compra única con Robux). Id = 0 significa "aún no creado" y se ignora.
 -- Crea el pase en el Creator Dashboard y pega aquí su Id.
 GameConfig.GamePasses = {
@@ -63,6 +87,11 @@ GameConfig.Text = {
 	ItemsHeader = "Objetos",
 	PassesHeader = "Pases (Robux)",
 	ProductsHeader = "Paquetes (Robux)",
+	UpgradesHeader = "Mejoras",
+	Level = "Nv",
+	MaxLevel = "Nivel máximo",
+	RebirthHeader = "Renacer",
+	RebirthDescription = "Reinicia monedas y mejoras. +%d%% de monedas para siempre",
 	DataLoadFailed = "No se pudieron cargar tus datos. Vuelve a entrar en un momento.",
 	SessionEnded = "Tus datos se abrieron en otro servidor. Vuelve a entrar.",
 }

@@ -9,5 +9,7 @@ return {
 	Coins = GameConfig.Currency.Starting,
 	Wins = 0,
 	OwnedItems = {}, -- [itemId] = true
+	UpgradeLevels = {}, -- [upgradeId] = nivel (si falta, es nivel 1)
+	Rebirths = 0,
 	PurchaseIdCache = {}, -- últimos recibos de developer products ya entregados
 }
