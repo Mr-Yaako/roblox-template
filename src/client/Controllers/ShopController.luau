@@ -132,7 +132,9 @@ local function buildList(list: ScrollingFrame, status: TextLabel)
 		return order
 	end
 
-	header(Text.ItemsHeader, nextOrder()).Parent = list
+	if next(GameConfig.ShopItems) then
+		header(Text.ItemsHeader, nextOrder()).Parent = list
+	end
 	for itemId, item in GameConfig.ShopItems do
 		local frame, setPrice = row(nextOrder(), item.DisplayName, item.Description, "Owns_" .. itemId, function()
 			local ok, message = purchaseItem:InvokeServer(itemId)
