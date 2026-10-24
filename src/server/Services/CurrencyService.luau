@@ -6,6 +6,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local DataService = require(script.Parent.DataService)
 local MonetizationService = require(script.Parent.MonetizationService)
 local GameConfig = require(ReplicatedStorage.Shared.GameConfig)
+local Progression = require(ReplicatedStorage.Shared.Progression)
 
 local KEY = GameConfig.Currency.Key
 
@@ -15,14 +16,20 @@ function CurrencyService.Get(player: Player): number
 	return DataService.Get(player, KEY) or 0
 end
 
--- Suma monedas ganadas jugando. Aplica multiplicadores de game passes (p. ej. VIP x2).
+-- Multiplicador total: el mejor game pass (p. ej. VIP x2) por el bono de renacimientos.
+function CurrencyService.GetMultiplier(player: Player): number
+	local rebirths = DataService.Get(player, "Rebirths") or 0
+	return MonetizationService.GetCoinMultiplier(player) * Progression.RebirthMultiplier(rebirths)
+end
+
+-- Suma monedas ganadas jugando. Aplica GetMultiplier (game passes y renacimientos).
 -- Usa applyMultiplier = false para recompensas fijas que no deben duplicarse.
 function CurrencyService.Add(player: Player, amount: number, applyMultiplier: boolean?): number?
 	if amount <= 0 then
 		return nil
 	end
 	if applyMultiplier ~= false then
-		amount *= MonetizationService.GetCoinMultiplier(player)
+		amount *= CurrencyService.GetMultiplier(player)
 	end
 	return DataService.Increment(player, KEY, math.floor(amount))
 end

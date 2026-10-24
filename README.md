@@ -10,9 +10,11 @@ Plantilla para hacer juegos sencillos de Roblox (obbies, tycoons, simuladores) s
 | Leaderstats | `src/server/Services/LeaderstatsService.luau` | Muestra en la tabla de jugadores los campos de `GameConfig.Leaderstats`. |
 | Moneda | `src/server/Services/CurrencyService.luau` | `Add` / `Spend` / `Get`, con multiplicador de game pass. |
 | Tienda | `src/server/Services/ShopService.luau` + `src/client/Controllers/ShopController.luau` | Objetos que se compran con la moneda del juego; el servidor valida todo. |
+| Mejoras por nivel | `src/server/Services/UpgradeService.luau` | Mejoras que se compran varias veces, cada nivel más caro (`GameConfig.Upgrades`). Efectos en `src/server/UpgradeEffects.luau`. |
+| Renacer | `src/server/Services/RebirthService.luau` | Reinicia monedas y mejoras a cambio de un bono permanente de monedas (`GameConfig.Rebirth`). Requisitos extra con `RebirthService.AddRequirement`. |
 | Robux | `src/server/Services/MonetizationService.luau` | Game passes y developer products con entrega segura de recibos. |
 
-Todo lo que cambia entre juegos está en `src/shared/GameConfig.luau`, `src/server/DataTemplate.luau` y `src/server/ItemEffects.luau`.
+Todo lo que cambia entre juegos está en `src/shared/GameConfig.luau`, `src/server/DataTemplate.luau`, `src/server/ItemEffects.luau` y `src/server/UpgradeEffects.luau`. Si un juego no usa mejoras o renacer, deja `GameConfig.Upgrades = {}` y `GameConfig.Rebirth.Enabled = false`.
 
 ## Instalación en Windows (una sola vez)
 
